@@ -1,12 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
 
-import SignIn from './src/screens/SignIn';
+import Routes from './src/routes';
 
 export default function App() {
-  return (
-    <View>
-      <SignIn />
-    </View>
-  );
+  return <Routes />;
 }
