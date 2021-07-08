@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { Container, Content, LogoTitle, SignInLabel } from './styles';
 import Button from '../../components/Button';
@@ -7,47 +7,49 @@ import FormGroup from '../../components/FormGroup';
 import Input from '../../components/Input';
 import Label from '../../components/Label';
 
-const SignUp = () => {
+const SignUp = ({ navigation }) => {
   return (
-    <Container>
+    <Container
+      contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
       <Content>
         <LogoTitle>BookingApp</LogoTitle>
 
         <FormGroup>
-          <Label htmlFor="email" color="#FFF" required>Email</Label>
+          <Label htmlFor="email" color="#FFF">Email</Label>
           <Input id="email" name="email" type="text" placeholder="Email" />
         </FormGroup>
 
         <FormGroup>
-          <Label htmlFor="name" color="#FFF" required>Nome</Label>
-          <Input id="name" name="name" type="text" placeholder="name" />
+          <Label htmlFor="name" color="#FFF">Nome</Label>
+          <Input id="name" name="name" type="text" placeholder="Nome" />
         </FormGroup>
 
         <FormGroup>
-          <Label htmlFor="phone" color="#FFF" required>Telefone</Label>
-          <Input id="phone" name="phone" type="text" placeholder="phone" />
+          <Label htmlFor="phone" color="#FFF">Telefone</Label>
+          <Input id="phone" name="phone" type="text" placeholder="Telefone" />
         </FormGroup>
 
         <FormGroup>
-          <Label htmlFor="apartment" color="#FFF" required>Apartamento</Label>
+          <Label htmlFor="apartment" color="#FFF">Apartamento</Label>
           <Input
             id="apartment"
             name="apartment"
             type="text"
-            placeholder="apartment"
+            placeholder="Apartmento"
           />
         </FormGroup>
 
         <FormGroup>
-          <Label htmlFor="password" color="#FFF" required>Senha</Label>
+          <Label htmlFor="password" color="#FFF">Senha</Label>
           <Input placeholder="Senha" name="password" id="password" type="password" />
         </FormGroup>
 
         <Button margin="20px 0">Cadastrar</Button>
       </Content>
-      <View>
+
+      <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
         <SignInLabel>Voltar para Login</SignInLabel>
-      </View>
+      </TouchableOpacity>
     </Container>
   );
 };

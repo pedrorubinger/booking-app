@@ -1,12 +1,12 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.KeyboardAvoidingView`
+export const Container = styled.ScrollView`
   display: flex;
   padding: 0 20px;
   padding-top: 35px;
   height: 100%;
   background-color: #457B9D;
-  justify-content: center;
+  /* justify-content: center; */
 `;
 
 export const Content = styled.KeyboardAvoidingView`

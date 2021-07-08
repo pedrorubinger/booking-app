@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { Container, Content, LogoTitle, SignUpLabel } from './styles';
 import Button from '../../components/Button';
@@ -7,7 +7,7 @@ import FormGroup from '../../components/FormGroup';
 import Input from '../../components/Input';
 import Label from '../../components/Label';
 
-const SignIn = () => {
+const SignIn = ({ navigation }) => {
   return (
     <Container>
       <Content>
@@ -25,9 +25,10 @@ const SignIn = () => {
 
         <Button margin="20px 0">Entrar</Button>
       </Content>
-      <View>
+
+      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
         <SignUpLabel>Registre-se</SignUpLabel>
-      </View>
+      </TouchableOpacity>
     </Container>
   );
 };
