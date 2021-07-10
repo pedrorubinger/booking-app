@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import { StyledInput } from './styles';
 
-const Input = (props) => {
-  const { value = '', ...rest } = props;
-
+const Input = ({ ...rest }, ref) => {
   return (
-    <StyledInput value={value} {...rest} />
+    <StyledInput ref={ref} {...rest} />
   );
 };
 
-export default Input;
+export default forwardRef(Input);
