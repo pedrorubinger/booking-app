@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 
 export const MensagemCustomizada = styled.Text`
-  color: #ff3535;
+  color: red;
   font-size: 11px;
   margin-top: 5px;
   text-align: left;

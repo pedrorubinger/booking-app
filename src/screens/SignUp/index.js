@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
 import firebase from 'firebase/app';
+import { TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -12,7 +12,7 @@ import Input from '../../components/Input';
 import Label from '../../components/Label';
 import MensagemDeErro from '../../components/MensagemDeErro';
 
-const esquemaDeLogin = Yup.object().shape({
+const esquemaDeRegistro = Yup.object().shape({
   email: Yup.string()
     .email('Você precisa informar um email válido!')
     .required('Insira um email!'),
@@ -28,26 +28,28 @@ const SignUp = ({ navigation }) => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(esquemaDeLogin),
+    resolver: yupResolver(esquemaDeRegistro),
     mode: 'onBlur',
   });
   const [submitting, setSubmitting] = useState(false);
 
   const registrarUsuario = async (dados) => {
     try {
-      console.log('submitting:', submitting);
       setSubmitting(true);
-      console.log('dados:', dados);
+      const db = firebase.firestore();
 
-      const credencial = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(dados.email, dados.password);
+      await db.runTransaction(async (transaction) => {
+        const userRef = db.collection('user').doc(dados.email);
 
-      console.log('credencial:', credencial);
-      navigation.navigate('SignIn');
+        await firebase
+          .auth()
+          .createUserWithEmailAndPassword(dados.email, dados.password);
+        transaction.set(userRef, { ...dados, role: 'resident' });
+      });
+
+      await navigation.navigate('SignIn');
     } catch (error) {
-      console.log('erro ao registrar usuário:', error);
-    } finally {
+      console.log('>>>> erro ao registrar usuário:', error);
       setSubmitting(false);
     }
   };
@@ -155,7 +157,7 @@ const SignUp = ({ navigation }) => {
           render={({ field }) => (
             <Input
               {...field}
-              type="text"
+              secureTextEntry
               onChangeText={(value) => field.onChange(value)}
               id="password"
               name="password"
@@ -170,7 +172,11 @@ const SignUp = ({ navigation }) => {
         )}
       </FormGroup>
 
-      <Button margin="20px 0" onPress={handleSubmit(registrarUsuario)}>
+      <Button
+        margin="20px 0"
+        onPress={handleSubmit(registrarUsuario)}
+        disabled={submitting}
+      >
         Cadastrar
       </Button>
 

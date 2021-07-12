@@ -1,18 +1,19 @@
 import React from 'react';
 
-import { StyledButton, StyledText } from './styles';
+import { BotaoEstilizado, TextoEstilizado } from './styles';
 
 const Button = (props) => {
-  const { children, color, backgroundColor, margin, ...rest } = props;
+  const { children, color, disabled, backgroundColor, margin, ...rest } = props;
 
   return (
-    <StyledButton
+    <BotaoEstilizado
       backgroundColor={backgroundColor}
       margin={margin}
+      disabled={disabled}
       {...rest}
     >
-      <StyledText color={color}>{children}</StyledText>
-    </StyledButton>
+      <TextoEstilizado color={color}>{children}</TextoEstilizado>
+    </BotaoEstilizado>
   );
 };
 
