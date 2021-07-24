@@ -10,7 +10,7 @@ import 'firebase/firestore';
 
 import { Container, Content, LogoTitle, SignUpLabel } from './styles';
 import { setUser } from '../../store/reducers/auth';
-import Button from '../../components/Button';
+import Botao from '../../components/Button';
 import FormGroup from '../../components/FormGroup';
 import Input from '../../components/Input';
 import Label from '../../components/Label';
@@ -28,7 +28,7 @@ const SignIn = ({ navigation }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(esquemaDeLogin),
     mode: 'onBlur',
@@ -108,7 +108,13 @@ const SignIn = ({ navigation }) => {
           )}
         </FormGroup>
 
-        <Button margin="20px 0" onPress={handleSubmit(entrar)}>Entrar</Button>
+        <Botao
+          disabled={isSubmitting}
+          margin="20px 0"
+          onPress={handleSubmit(entrar)}
+        >
+          {isSubmitting ? 'Entrando...' : 'Entrar'}
+        </Botao>
       </Content>
 
       <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>

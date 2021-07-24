@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import firebase from 'firebase/app';
 import { TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
@@ -26,16 +26,14 @@ const SignUp = ({ navigation }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(esquemaDeRegistro),
     mode: 'onBlur',
   });
-  const [submitting, setSubmitting] = useState(false);
 
   const registrarUsuario = async (dados) => {
     try {
-      setSubmitting(true);
       const db = firebase.firestore();
 
       await db.runTransaction(async (transaction) => {
@@ -44,14 +42,18 @@ const SignUp = ({ navigation }) => {
         await firebase
           .auth()
           .createUserWithEmailAndPassword(dados.email, dados.password);
-        transaction.set(userRef, { email: dados.email, role: 'resident' });
-        // transaction.set(userRef, { ...dados, role: 'resident' });
+        transaction.set(userRef, {
+          email: dados.email,
+          role: 'resident',
+          apartment: dados.apartment,
+          name: dados.name,
+          phone: dados.phone,
+        });
       });
 
       await navigation.navigate('SignIn');
     } catch (error) {
       console.log('>>>> erro ao registrar usuário:', error);
-      setSubmitting(false);
     }
   };
 
@@ -176,9 +178,9 @@ const SignUp = ({ navigation }) => {
       <Button
         margin="20px 0"
         onPress={handleSubmit(registrarUsuario)}
-        disabled={submitting}
+        disabled={isSubmitting}
       >
-        Cadastrar
+        {isSubmitting ? 'Cadastrando...' : 'Cadastrar'}
       </Button>
 
       <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>

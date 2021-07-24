@@ -2,7 +2,7 @@ import React from 'react';
 
 import { BotaoEstilizado, TextoEstilizado } from './styles';
 
-const Button = (props) => {
+const Botao = (props) => {
   const { children, color, disabled, backgroundColor, margin, ...rest } = props;
 
   return (
@@ -17,4 +17,4 @@ const Button = (props) => {
   );
 };
 
-export default Button;
+export default Botao;
