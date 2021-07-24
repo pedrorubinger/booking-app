@@ -1,11 +1,15 @@
 import React from 'react';
 import firebase from 'firebase/app';
+import { useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Yup from 'yup';
+import 'firebase/firestore';
 
 import { Container, Content, LogoTitle, SignUpLabel } from './styles';
+import { setUser } from '../../store/reducers/auth';
 import Button from '../../components/Button';
 import FormGroup from '../../components/FormGroup';
 import Input from '../../components/Input';
@@ -20,6 +24,7 @@ const esquemaDeLogin = Yup.object().shape({
 });
 
 const SignIn = ({ navigation }) => {
+  const dispatch = useDispatch();
   const {
     control,
     handleSubmit,
@@ -30,14 +35,23 @@ const SignIn = ({ navigation }) => {
   });
 
   const entrar = async (dados) => {
-    console.log('submeteu:', dados);
-
     try {
-      const credenciais = await firebase
-        .auth().signInWithEmailAndPassword(dados.email, dados.password);
-        // .createUserWithEmailAndPassword(dados.email, dados.password);
+      const db = firebase.firestore();
+      const docRef = db.collection("user").doc(dados.email);
+      const doc = await docRef.get();
 
-      console.log('credenciais:', credenciais);
+      if (doc.exists) {
+        const credenciais = await firebase
+          .auth()
+          .signInWithEmailAndPassword(dados.email, dados.password);
+        const user = { ...doc.data(), token: credenciais.user };
+
+        dispatch(setUser(user));
+        await AsyncStorage.setItem(
+          '@storage_key',
+          JSON.stringify(credenciais.user)
+        );
+      } else throw new Error();
     } catch (error) {
       console.log('Erro ao autenticar:', error);
       /** TO DO: Estruturar e armazenar no reducer... */
@@ -64,7 +78,6 @@ const SignIn = ({ navigation }) => {
                 name="email"
                 placeholder="Email"
                 hasError={!!errors?.email}
-                withShadow
               />
             )}
           />
@@ -85,9 +98,8 @@ const SignIn = ({ navigation }) => {
                 onChangeText={(value) => field.onChange(value)}
                 id="password"
                 name="password"
-                placeholder="password"
+                placeholder="Senha"
                 hasError={!!errors?.password}
-                withShadow
               />
             )}
           />

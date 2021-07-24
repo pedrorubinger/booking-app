@@ -44,7 +44,8 @@ const SignUp = ({ navigation }) => {
         await firebase
           .auth()
           .createUserWithEmailAndPassword(dados.email, dados.password);
-        transaction.set(userRef, { ...dados, role: 'resident' });
+        transaction.set(userRef, { email: dados.email, role: 'resident' });
+        // transaction.set(userRef, { ...dados, role: 'resident' });
       });
 
       await navigation.navigate('SignIn');

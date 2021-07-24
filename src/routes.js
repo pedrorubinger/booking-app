@@ -2,6 +2,7 @@ import * as React from 'react';
 // import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
@@ -11,7 +12,8 @@ const Stack = createStackNavigator();
 // const Drawer = createDrawerNavigator();
 
 const Routes = () => {
-  const isAuthenticated = false; // TO DO: Implement function here...
+  const { user } = useSelector((state) => state.Auth);
+  const isAuthenticated = !!user?.token;
 
   return (
     <NavigationContainer>
