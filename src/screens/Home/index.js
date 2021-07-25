@@ -19,27 +19,6 @@ import {
 import Cabecalho from '../../components/Cabecalho';
 import NavegacaoHome from '../../components/NavegacaoHome';
 
-// const ambientesTemporarios = [
-//   { id: 1, nome: 'Academia 01', capacidade: 25, imagem: fotoAcademia },
-//   { id: 2, nome: 'Piscina 02', capacidade: 20, imagem: fotoAcademia },
-//   { id: 3, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 4, nome: 'Sauna 02', capacidade: 10, imagem: fotoAcademia },
-//   { id: 5, nome: 'Sauna 03', capacidade: 10, imagem: fotoAcademia },
-//   { id: 6, nome: 'Churrasqueira 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 7, nome: 'Churrasqueira 02', capacidade: 10, imagem: fotoAcademia },
-//   { id: 8, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 9, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 10, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 11, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 12, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 13, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 14, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 15, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 16, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 17, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-//   { id: 18, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
-// ];
-
 const Home = ({ navigation }) => {
   const { user } = useSelector((state) => state.Auth);
   const { itemAtivo } = useSelector((state) => state.HomeNav);
@@ -50,7 +29,7 @@ const Home = ({ navigation }) => {
   const [listaDeReservas, setListaDeReservas] = useState(null);
   const listaDeMenus = user.role === 'resident'
     ? [
-        { id: 1, nome: 'Ambientes' },
+        { id: 1, nome: 'Locais Disponíveis' },
         { id: 2, nome: 'Minhas Reservas'  }
       ]
     : [
@@ -189,7 +168,7 @@ const Home = ({ navigation }) => {
 
     switch (itemAtivo) {
       case 1:
-        return listaDeAmbientes;
+        return listaDeAmbientes; // Filtrar locais que não estão reservados pelo morador.
       case 2:
         return listaDeMinhasReservas;
       default:
@@ -203,13 +182,14 @@ const Home = ({ navigation }) => {
     if (itemAtivo === 1) {
       return (
         <Item
-          onPress={() => navigation.navigate('Detalhes', {
+          onPress={() => navigation.navigate('DetalhesAmbiente', {
             item: {
               ID: item.id,
               Nome: item.nome,
               'Está disponível': item.disponivel ? 'Sim' : 'Não',
               Capacidade: `${item.capacidade} pessoas`,
             },
+            role: user.role,
           })}
         >
           <TituloDoItem>{item.nome}</TituloDoItem>
@@ -229,7 +209,7 @@ const Home = ({ navigation }) => {
           return (
             <Item
               cor="#93827F"
-              onPress={() => navigation.navigate('Detalhes', {
+              onPress={() => navigation.navigate('DetalhesMorador', {
                 item: {
                   Email: item.email,
                   Nome: item.name,
@@ -251,7 +231,7 @@ const Home = ({ navigation }) => {
           return (
             <Item
               cor="#C94277"
-              onPress={() => navigation.navigate('Detalhes', {
+              onPress={() => navigation.navigate('DetalhesReserva', {
                 item: {
                   ID: item.id,
                   Morador: item.resident_email,
@@ -285,7 +265,7 @@ const Home = ({ navigation }) => {
     return (
       <Item
         cor="#F6511D"
-        onPress={() => navigation.navigate('Detalhes', {
+        onPress={() => navigation.navigate('DetalhesMinhaReserva', {
           item: {
             ID: item.id,
             Ambiente: item.place_name,
@@ -318,7 +298,7 @@ const Home = ({ navigation }) => {
         listaDeMenus={listaDeMenus}
         mostrarIconeDeAdicionar={
           !(user.role === 'admin' && itemAtivo === 2) &&
-          !(user.role === 'resident' && itemAtivo === 1)
+          user.role !== 'resident'
         }
       />
       {!listagem.length ? (
@@ -328,9 +308,9 @@ const Home = ({ navigation }) => {
       ) : (
         <ListaDeItens
           numColumns={2}
-          keyExtractor={(item) => item.id.toString()}
           data={listagem}
           contentContainerStyle={{ paddingBottom: 30 }}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => obterItem(item)}
         />
       )}

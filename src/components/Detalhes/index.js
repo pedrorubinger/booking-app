@@ -1,22 +1,52 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
-import { Conteudo } from './styles';
-import Cabecalho from '../../components/Cabecalho';
+import {
+  Botao,
+  CaixaDeInformacao,
+  ContainerDeBotoes,
+  Conteudo,
+  TextoConteudo,
+  TextoDoBotao,
+  TextoLabel,
+} from './styles';
+import Cabecalho from '../Cabecalho';
 
-const VisualizarItem = () => {
+const Detalhes = ({ item, navigation, botoes }) => {
   return (
     <View>
       <Cabecalho
         nomeDoIcone="arrow-left"
         texto="Detalhes"
-        aoPressionarIcone={() => console.log('pressionou o ícone do header!')}
+        aoPressionarIcone={() => navigation.goBack()}
       />
+
+      {!!botoes?.length && (
+        <ContainerDeBotoes>
+          {botoes.map((botao, i) => (
+            <Botao
+              key={botao.id || i}
+              corDoBotao={botao.cor}
+              onPress={botao.aoPressionar}
+            >
+              <TextoDoBotao>{botao.texto}</TextoDoBotao>
+            </Botao>
+          ))}
+        </ContainerDeBotoes>
+      )}
+
       <Conteudo>
-        <Text>Teste</Text>
+        {Object.entries(item)
+          .map((element, i) => (
+            <CaixaDeInformacao key={element.id || i}>
+              <TextoLabel>{element[0]}:</TextoLabel>
+              <TextoConteudo>{element[1]}</TextoConteudo>
+            </CaixaDeInformacao>
+          ))
+        }
       </Conteudo>
     </View>
   );
 };
 
-export default VisualizarItem;
+export default Detalhes;
