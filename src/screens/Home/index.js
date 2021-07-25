@@ -40,7 +40,7 @@ import NavegacaoHome from '../../components/NavegacaoHome';
 //   { id: 18, nome: 'Sauna 01', capacidade: 10, imagem: fotoAcademia },
 // ];
 
-const Home = () => {
+const Home = ({ navigation }) => {
   const { user } = useSelector((state) => state.Auth);
   const { itemAtivo } = useSelector((state) => state.HomeNav);
   const dispatch = useDispatch();
@@ -165,7 +165,7 @@ const Home = () => {
     (user.role === 'admin' && !listaDeMoradores && !listaDeReservas) ||
     (user.role === 'resident' && !listaDeMinhasReservas)
   ) {
-    return <Text>Carregando...</Text>;
+    return <Text>Carregando dados...</Text>;
   }
 
   console.log('listaDeAmbientes:', listaDeAmbientes);
@@ -202,7 +202,16 @@ const Home = () => {
   const obterItem = (item) => {
     if (itemAtivo === 1) {
       return (
-        <Item>
+        <Item
+          onPress={() => navigation.navigate('Detalhes', {
+            item: {
+              ID: item.id,
+              Nome: item.nome,
+              'Está disponível': item.disponivel ? 'Sim' : 'Não',
+              Capacidade: `${item.capacidade} pessoas`,
+            },
+          })}
+        >
           <TituloDoItem>{item.nome}</TituloDoItem>
           <Info>
             <Feather name="user" color="#FFF" size={16} />
@@ -218,7 +227,17 @@ const Home = () => {
       switch (itemAtivo) {  
         case 2:
           return (
-            <Item cor="#93827F">
+            <Item
+              cor="#93827F"
+              onPress={() => navigation.navigate('Detalhes', {
+                item: {
+                  Email: item.email,
+                  Nome: item.name,
+                  Telefone: item.phone,
+                  Apartamento: item.apartment,
+                },
+              })}
+            >
               <TituloDoItem>{item.name}</TituloDoItem>
               <Info>
                 <Feather name="home" color="#FFF" size={14} />
@@ -230,14 +249,31 @@ const Home = () => {
           );
         case 3:
           return (
-            <Item cor="#C94277">
+            <Item
+              cor="#C94277"
+              onPress={() => navigation.navigate('Detalhes', {
+                item: {
+                  ID: item.id,
+                  Morador: item.resident_email,
+                  Ambiente: item.place_name,
+                  'Data Inicial': item.initial_date,
+                  'Data Final': item.end_date,
+                },
+              })}  
+            >
               <TituloDoItem>{item.place_name}</TituloDoItem>
               <Info margemInferior="8px">
                 <Feather name="user" color="#FFF" size={16} />
                 <Subtitulo margemEsquerda="5px">{item.resident_email}</Subtitulo>
               </Info>
-              <Subtitulo>De: {item.initial_date}</Subtitulo>
-              <Subtitulo>Até: {item.end_date}</Subtitulo>
+              <Subtitulo>
+                <Text style={{ fontWeight: 'bold' }}>De: </Text>
+                {item.initial_date}
+              </Subtitulo>
+              <Subtitulo>
+                <Text style={{ fontWeight: 'bold' }}>Até: </Text>
+                {item.end_date}
+              </Subtitulo>
             </Item>
           );
         default:
@@ -247,7 +283,17 @@ const Home = () => {
 
     // Minhas Reservas - Morador
     return (
-      <Item cor="#F6511D">
+      <Item
+        cor="#F6511D"
+        onPress={() => navigation.navigate('Detalhes', {
+          item: {
+            ID: item.id,
+            Ambiente: item.place_name,
+            'Data Inicial': item.initial_date,
+            'Data Final': item.end_date,
+          },
+        })}  
+      >
         <TituloDoItem margemInferior="8px">{item.place_name}</TituloDoItem>
         <Subtitulo>
           <Text style={{ fontWeight: 'bold' }}>De: </Text>
@@ -270,7 +316,10 @@ const Home = () => {
       />
       <NavegacaoHome
         listaDeMenus={listaDeMenus}
-        mostrarIconeDeAdicionar={!(user.role === 'admin' && itemAtivo === 2)}
+        mostrarIconeDeAdicionar={
+          !(user.role === 'admin' && itemAtivo === 2) &&
+          !(user.role === 'resident' && itemAtivo === 1)
+        }
       />
       {!listagem.length ? (
         <ContainerDaMensagem>

@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import SignIn from './screens/SignIn';
 import SignUp from './screens/SignUp';
 import Home from './screens/Home';
+import Detalhes from './screens/Detalhes';
 
 const Stack = createStackNavigator();
 // const Drawer = createDrawerNavigator();
@@ -19,7 +20,10 @@ const Routes = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isAuthenticated ? (
-          <Stack.Screen name="Home" component={Home} />
+          <>
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Detalhes" component={Detalhes} />
+          </>
         ) : (
           <>
             <Stack.Screen name="SignIn" component={SignIn} />
