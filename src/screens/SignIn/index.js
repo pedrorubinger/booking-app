@@ -53,8 +53,8 @@ const SignIn = ({ navigation }) => {
         );
       } else throw new Error();
     } catch (error) {
+      /** TO DO: Implementar error handling... */
       console.log('Erro ao autenticar:', error);
-      /** TO DO: Estruturar e armazenar no reducer... */
     }
   };
 

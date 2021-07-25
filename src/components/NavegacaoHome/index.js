@@ -5,7 +5,7 @@ import { Container, Lista, Item, TextoDeItem } from './styles';
 import { alternarNavegacao } from '../../store/reducers/home-nav';
 import { useDispatch, useSelector } from 'react-redux';
 
-const NavegacaoHome = ({ listaDeMenus }) => {
+const NavegacaoHome = ({ listaDeMenus, mostrarIconeDeAdicionar }) => {
   const { itemAtivo } = useSelector((state) => state.HomeNav);
   const dispatch = useDispatch();
 
@@ -22,7 +22,6 @@ const NavegacaoHome = ({ listaDeMenus }) => {
         renderItem={({ item, index }) => (
           <Item
             key={item.id || index}
-            margemDireita={index === 0}
             onPress={() => {
               if (item.id !== itemAtivo) {
                 dispatch(alternarNavegacao(item.id));
@@ -35,7 +34,9 @@ const NavegacaoHome = ({ listaDeMenus }) => {
           </Item>
         )}
       /> 
-      <Feather name="plus-circle" color="green" size={25} />
+      {mostrarIconeDeAdicionar && (
+        <Feather name="plus-circle" color="green" size={25} />
+      )}
     </Container>
   );
 };

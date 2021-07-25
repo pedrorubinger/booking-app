@@ -14,7 +14,7 @@ export const Item = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;
   align-self: flex-start;
-  margin-right: ${({ margemDireita }) => margemDireita ? '20px' : '0px'};
+  margin-right: 20px;
 `;
 
 export const TextoDeItem = styled.Text`

@@ -24,7 +24,7 @@ export const TextoDeListaVazia = styled.Text`
 `;
 
 export const Item = styled.TouchableOpacity`
-  background-color: #90be6d;
+  background-color: ${({ cor = '#90be6d' }) => cor};
   margin: 7px 5px;
   padding: 10px;
   display: flex;
@@ -37,16 +37,18 @@ export const TituloDoItem = styled.Text`
   color: #FFF;
   font-weight: bold;
   font-size: 17px;
+  margin-bottom: ${({ margemInferior = '0px'}) => margemInferior};
 `;
 
 export const Info = styled.View`
   margin-top: 5px;
+  margin-bottom: ${({ margemInferior = '0px'}) => margemInferior};
   display: flex;
   flex-direction: row;
   align-items: center;
 `;
 
-export const Capacidade = styled.Text`
+export const Subtitulo = styled.Text`
   color: #FFF;
-  margin-left: 5px;
+  margin-left: ${({ margemEsquerda = '0px' }) => margemEsquerda};
 `;
