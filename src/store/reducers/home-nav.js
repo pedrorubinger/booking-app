@@ -15,7 +15,6 @@ const reducer = (state = estadoInicial, action) => {
 };
 
 /**
- * 
  * @param {Number} itemAtivo - Id (Integer) do item de navegação ativo.
  */
 export const alternarNavegacao = (itemAtivo) => ({

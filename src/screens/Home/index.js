@@ -6,6 +6,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 import { alternarNavegacao } from '../../store/reducers/home-nav';
+import { atualizarAmbientes } from '../../store/reducers/ambientes'; 
 import {
   Subtitulo,
   Container,
@@ -21,9 +22,9 @@ import NavegacaoHome from '../../components/NavegacaoHome';
 
 const Home = ({ navigation }) => {
   const { user } = useSelector((state) => state.Auth);
+  const { listaDeAmbientes } = useSelector((state) => state.Ambientes);
   const { itemAtivo } = useSelector((state) => state.HomeNav);
   const dispatch = useDispatch();
-  const [listaDeAmbientes, setListaDeAmbientes] = useState(null);
   const [listaDeMoradores, setListaDeMoradores] = useState(null);
   const [listaDeMinhasReservas, setListaDeMinhasReservas] = useState(null);
   const [listaDeReservas, setListaDeReservas] = useState(null);
@@ -59,7 +60,7 @@ const Home = ({ navigation }) => {
           }
         });
 
-        setListaDeAmbientes(ambientes);
+        dispatch(atualizarAmbientes([...ambientes]));
     }).catch((err) => console.log('Erro ao buscar ambientes:', err));
   };
 
@@ -147,10 +148,10 @@ const Home = ({ navigation }) => {
     return <Text>Carregando dados...</Text>;
   }
 
-  console.log('listaDeAmbientes:', listaDeAmbientes);
-  console.log('listaDeReservas:', listaDeReservas);
-  console.log('listaDeMoradores:', listaDeMoradores);
-  console.log('listaDeMinhasReservas:', listaDeMinhasReservas);
+  // console.log('listaDeAmbientes:', listaDeAmbientes);
+  // console.log('listaDeReservas:', listaDeReservas);
+  // console.log('listaDeMoradores:', listaDeMoradores);
+  // console.log('listaDeMinhasReservas:', listaDeMinhasReservas);
 
   const getListagem = () => {
     if (user.role === 'admin') {
@@ -168,7 +169,7 @@ const Home = ({ navigation }) => {
 
     switch (itemAtivo) {
       case 1:
-        return listaDeAmbientes; // Filtrar locais que não estão reservados pelo morador.
+        return listaDeAmbientes; // TO DO: Filtrar locais que não estão reservados pelo morador.
       case 2:
         return listaDeMinhasReservas;
       default:
@@ -261,7 +262,6 @@ const Home = ({ navigation }) => {
       }
     }
 
-    // Minhas Reservas - Morador
     return (
       <Item
         cor="#F6511D"
@@ -300,6 +300,22 @@ const Home = ({ navigation }) => {
           !(user.role === 'admin' && itemAtivo === 2) &&
           user.role !== 'resident'
         }
+        aoClicarEmAdicionar={() => {
+          switch (itemAtivo) {
+            case 1:
+              return navigation.navigate('FormularioAmbientes', {
+                editMode: false,
+                dados: null,
+              });
+            case 3:
+              return navigation.navigate('FormularioAmbientes', { // TO DO: Mudar para formulário de reservas
+                editMode: false,
+                dados: null,
+              });
+            default:
+              return null;
+          }
+        }}
       />
       {!listagem.length ? (
         <ContainerDaMensagem>

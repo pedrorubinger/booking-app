@@ -11,7 +11,11 @@ const DetalhesAmbiente = ({ route, navigation }) => {
           id: 1,
           cor: 'orange',
           texto: 'Editar Ambiente',
-          aoPressionar: () => console.log('clicou para editar ambiente.'),
+          aoPressionar: () =>
+            navigation.navigate('FormularioAmbientes', {
+              editMode: true,
+              dados: item,
+            }),
         },
         {
           id: 2,

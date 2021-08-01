@@ -28,6 +28,7 @@ const Detalhes = ({ item, navigation, botoes }) => {
               key={botao.id || i}
               corDoBotao={botao.cor}
               onPress={botao.aoPressionar}
+              hasMarginRight={i === 0 && botoes.length > 1}
             >
               <TextoDoBotao>{botao.texto}</TextoDoBotao>
             </Botao>

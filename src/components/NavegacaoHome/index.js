@@ -4,8 +4,13 @@ import { Feather } from '@expo/vector-icons';
 import { Container, Lista, Item, TextoDeItem } from './styles';
 import { alternarNavegacao } from '../../store/reducers/home-nav';
 import { useDispatch, useSelector } from 'react-redux';
+import { TouchableOpacity } from 'react-native';
 
-const NavegacaoHome = ({ listaDeMenus, mostrarIconeDeAdicionar }) => {
+const NavegacaoHome = ({
+  aoClicarEmAdicionar,
+  listaDeMenus,
+  mostrarIconeDeAdicionar,
+}) => {
   const { itemAtivo } = useSelector((state) => state.HomeNav);
   const dispatch = useDispatch();
 
@@ -35,7 +40,9 @@ const NavegacaoHome = ({ listaDeMenus, mostrarIconeDeAdicionar }) => {
         )}
       /> 
       {mostrarIconeDeAdicionar && (
-        <Feather name="plus-circle" color="green" size={25} />
+        <TouchableOpacity onPress={aoClicarEmAdicionar}>
+          <Feather name="plus-circle" color="green" size={25} />
+        </TouchableOpacity>
       )}
     </Container>
   );

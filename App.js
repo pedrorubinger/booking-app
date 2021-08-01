@@ -9,8 +9,7 @@ import 'firebase/firestore';
 import { store } from './src/store';
 import Routes from './src/routes';
 
-const firebaseConfig = {
-};
+const firebaseConfig = {};
 
 export default function App() {
   if (!firebase.apps.length) {

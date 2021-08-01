@@ -2,9 +2,9 @@ import React, { forwardRef } from 'react';
 
 import { StyledInput } from './styles';
 
-const Input = ({ ...rest }, ref) => {
+const Input = ({ corDeFundo, ...rest }, ref) => {
   return (
-    <StyledInput ref={ref} {...rest} />
+    <StyledInput ref={ref} corDeFundo={corDeFundo} {...rest} />
   );
 };
 

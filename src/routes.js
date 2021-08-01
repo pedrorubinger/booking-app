@@ -11,6 +11,7 @@ import DetalhesAmbiente from './screens/DetalhesAmbiente';
 import DetalhesMorador from './screens/DetalhesMorador';
 import DetalhesReserva from './screens/DetalhesReserva';
 import DetalhesMinhaReserva from './screens/DetalhesMinhaReserva';
+import FormularioAmbientes from './components/FormularioAmbientes';
 
 const Stack = createStackNavigator();
 // const Drawer = createDrawerNavigator();
@@ -28,6 +29,10 @@ const Routes = () => {
             <Stack.Screen
               name="DetalhesAmbiente"
               component={DetalhesAmbiente}
+            />
+            <Stack.Screen
+              name="FormularioAmbientes"
+              component={FormularioAmbientes}
             />
             <Stack.Screen
               name="DetalhesMorador"

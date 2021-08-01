@@ -12,7 +12,7 @@ export const ContainerDeBotoes = styled.View`
 
 export const Botao = styled.TouchableOpacity`
   padding: 10px 25px;
-  margin-right: 12px;
+  margin-right: ${({ hasMarginRight }) => hasMarginRight ? '12px' : '0px'};
   border-radius: 6px;
   background-color: ${({ corDoBotao = 'grey' }) => corDoBotao};
 `;
