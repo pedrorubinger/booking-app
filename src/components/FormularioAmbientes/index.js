@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
 import { atualizarAmbientes } from '../../store/reducers/ambientes';
+import { atualizarReservas } from '../../store/reducers/reservas';
 import { Conteudo } from './styles';
 import Botao from '../Button';
 import Cabecalho from '../Cabecalho';
@@ -25,6 +26,7 @@ const validacaoAmbiente = Yup.object().shape({
 const FormularioAmbientes = ({ navigation, route }) => {
   const { dados, editMode } = route.params;
   const { listaDeAmbientes } = useSelector((state) => state.Ambientes);
+  const { listaDeReservas } = useSelector((state) => state.Reservas);
   const dispatch = useDispatch();
 
   const {
@@ -54,9 +56,9 @@ const FormularioAmbientes = ({ navigation, route }) => {
         capacidade: valores.capacidade,
       };
 
-      db.collection('place').doc(dados.ID).set(valoresFormatados)
+      await db.collection('place').doc(dados.ID).set(valoresFormatados)
         .then(() => {
-          const listaAtualizada = [...listaDeAmbientes].map((item) => {
+          const listaDeAmbientesAtt = [...listaDeAmbientes].map((item) => {
             if (item.id === dados.ID) {
               return { id: dados.ID, ...valoresFormatados };
             }
@@ -64,7 +66,7 @@ const FormularioAmbientes = ({ navigation, route }) => {
             return item;
           });
 
-          dispatch(atualizarAmbientes(listaAtualizada));
+          dispatch(atualizarAmbientes(listaDeAmbientesAtt));
           navigation.navigate('Home');
         })
         .catch(() => {
@@ -76,6 +78,38 @@ const FormularioAmbientes = ({ navigation, route }) => {
             ]
           );
         });
+
+      await db.collection('reservation').where('place_id', '==', dados.ID).get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            db.collection('reservation').doc(doc.id).update({
+              place_name: valores.nome,
+            })
+            .then(() => {})
+            .catch(() => {
+              throw new Error();
+            });
+          });
+        })
+        .catch(() => {
+          Alert.alert(
+            'Erro!',
+            'Não foi possível atualizar este ambiente!',
+            [
+              { text: 'OK' }
+            ]
+          );
+        });
+
+      const listaDeReservasAtt = [...listaDeReservas].map((item) => {
+        if (item.place_id === dados.ID) {
+          return { ...item, place_name: valores.nome };
+        }
+
+        return item;
+      });
+
+      dispatch(atualizarReservas(listaDeReservasAtt));
     } else {
       const valoresFormatados = {
         disponivel: true,

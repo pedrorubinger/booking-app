@@ -7,6 +7,7 @@ import 'firebase/firestore';
 
 import { alternarNavegacao } from '../../store/reducers/home-nav';
 import { atualizarAmbientes } from '../../store/reducers/ambientes'; 
+import { atualizarReservas } from '../../store/reducers/reservas';
 import {
   Subtitulo,
   Container,
@@ -23,12 +24,12 @@ import NavegacaoHome from '../../components/NavegacaoHome';
 const Home = ({ navigation }) => {
   const { user } = useSelector((state) => state.Auth);
   const { listaDeAmbientes } = useSelector((state) => state.Ambientes);
+  const { listaDeReservas } = useSelector((state) => state.Reservas);
   const { itemAtivo } = useSelector((state) => state.HomeNav);
   const dispatch = useDispatch();
   const [listaDeMoradores, setListaDeMoradores] = useState(null);
   const [listaDeMinhasReservas, setListaDeMinhasReservas] = useState(null);
-  const [listaDeReservas, setListaDeReservas] = useState(null);
-  const listaDeMenus = user.role === 'resident'
+  const listaDeMenus = user?.role === 'resident'
     ? [
         { id: 1, nome: 'Locais Disponíveis' },
         { id: 2, nome: 'Minhas Reservas'  }
@@ -50,7 +51,7 @@ const Home = ({ navigation }) => {
         querySnapshot.forEach((doc) => {
           const ambiente = doc.data();
 
-          if (user.role === 'resident' && !ambiente.disponivel) {
+          if (user?.role === 'resident' && !ambiente.disponivel) {
             return;
           } else {
             ambientes.push({
@@ -120,19 +121,19 @@ const Home = ({ navigation }) => {
           });
         });
 
-        setListaDeReservas(reservas);
+        dispatch(atualizarReservas([...reservas]));
       }).catch((err) => console.log('Erro ao buscar reservas:', err));
   };
 
   useEffect(() => {
     buscarAmbientes();
 
-    if (user.role === 'admin') {
+    if (user?.role === 'admin') {
       buscarMoradores();
       buscarReservas();
     }
 
-    if (user.role === 'resident') {
+    if (user?.role === 'resident') {
       buscarMinhasReservas();
     }
 
@@ -142,8 +143,8 @@ const Home = ({ navigation }) => {
   }, []);
 
   if (!listaDeAmbientes ||
-    (user.role === 'admin' && !listaDeMoradores && !listaDeReservas) ||
-    (user.role === 'resident' && !listaDeMinhasReservas)
+    (user?.role === 'admin' && !listaDeMoradores && !listaDeReservas) ||
+    (user?.role === 'resident' && !listaDeMinhasReservas)
   ) {
     return <Text>Carregando dados...</Text>;
   }
@@ -154,7 +155,7 @@ const Home = ({ navigation }) => {
   // console.log('listaDeMinhasReservas:', listaDeMinhasReservas);
 
   const getListagem = () => {
-    if (user.role === 'admin') {
+    if (user?.role === 'admin') {
       switch (itemAtivo) {
         case 1:
           return listaDeAmbientes;
@@ -204,7 +205,7 @@ const Home = ({ navigation }) => {
       );
     }
 
-    if (user.role === 'admin') {
+    if (user?.role === 'admin') {
       switch (itemAtivo) {  
         case 2:
           return (
@@ -292,13 +293,15 @@ const Home = ({ navigation }) => {
       <Cabecalho
         nomeDoIcone="menu"
         texto="Home"
-        aoPressionarIcone={() => console.log('pressionou o ícone do header!')}
+        aoPressionarIcone={() => {
+          navigation.toggleDrawer();
+        }}
       />
       <NavegacaoHome
         listaDeMenus={listaDeMenus}
         mostrarIconeDeAdicionar={
-          !(user.role === 'admin' && itemAtivo === 2) &&
-          user.role !== 'resident'
+          !(user?.role === 'admin' && itemAtivo === 2) &&
+          user?.role !== 'resident'
         }
         aoClicarEmAdicionar={() => {
           switch (itemAtivo) {
