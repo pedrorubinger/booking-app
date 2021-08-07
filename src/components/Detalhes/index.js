@@ -27,10 +27,13 @@ const Detalhes = ({ item, navigation, botoes }) => {
             <Botao
               key={botao.id || i}
               corDoBotao={botao.cor}
+              disabled={botao.desativado}
               onPress={botao.aoPressionar}
               hasMarginRight={i === 0 && botoes.length > 1}
             >
-              <TextoDoBotao>{botao.texto}</TextoDoBotao>
+              <TextoDoBotao desativado={botao.desativado}>
+                {botao.texto}
+              </TextoDoBotao>
             </Botao>
           ))}
         </ContainerDeBotoes>

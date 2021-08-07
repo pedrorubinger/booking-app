@@ -21,6 +21,7 @@ export const TextoDoBotao = styled.Text`
   font-size: 16px;
   text-align: center;
   color: #FFF;
+  opacity: ${({ desativado }) => desativado ? '.7' : '1'};
 `;
 
 export const Conteudo = styled.ScrollView`

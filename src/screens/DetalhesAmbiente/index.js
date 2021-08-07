@@ -1,10 +1,68 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, View } from 'react-native';
+import firebase from 'firebase/app';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { atualizarAmbientes } from '../../store/reducers/ambientes';
+import { atualizarReservas } from '../../store/reducers/reservas';
 import Detalhes from '../../components/Detalhes';
 
 const DetalhesAmbiente = ({ route, navigation }) => {
   const { item, role } = route.params;
+  const { listaDeAmbientes } = useSelector((state) => state.Ambientes);
+  const { listaDeReservas } = useSelector((state) => state.Reservas);
+  const [carregando, setCarregando] = useState(false);
+  const dispatch = useDispatch();
+
+  const aoExcluirAmbiente = () => {
+    const id = item.ID;
+
+    if (!id) {
+      return null;
+    }
+
+    Alert.alert(
+      'Você tem certeza?',
+      'Este ambiente e todas as reservas associadas a ele serão permanentemente excluídas.',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: () => {
+            setCarregando(true);
+
+            const db = firebase.firestore();
+
+            db.collection('place').doc(id).delete().then(async () => {
+              await db
+                .collection('reservation')
+                .where('place_id', '==', id)
+                .get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach(async (doc) => {
+                      await db.collection('reservation').doc(doc.id).delete();
+                    });
+                  })
+
+              const listaDeAmbientesAtualizada = [...listaDeAmbientes]
+                .filter((item) => item.id !== id);
+              const listaDeReservasAtualizada = [...listaDeReservas]
+                .filter((item) => item.place_id !== id);
+
+              dispatch(atualizarAmbientes(listaDeAmbientesAtualizada));
+              dispatch(atualizarReservas(listaDeReservasAtualizada));
+              navigation.navigate('Home');
+            }).catch((err) => {
+              console.error('Erro ao excluir ambiente:', err);
+            });
+
+            setCarregando(false);
+          },
+        },
+      ]
+    );
+  };
+
   const botoes = role === 'admin'
     ? [
         {
@@ -20,8 +78,9 @@ const DetalhesAmbiente = ({ route, navigation }) => {
         {
           id: 2,
           cor: 'red',
-          texto: 'Excluir Ambiente',
-          aoPressionar: () => console.log('clicou para excluir ambiente.'),
+          texto: carregando ? 'Excluindo...' : 'Excluir Ambiente',
+          desativado: carregando,
+          aoPressionar: () => aoExcluirAmbiente(),
         }
       ]
     : [
@@ -35,7 +94,22 @@ const DetalhesAmbiente = ({ route, navigation }) => {
 
   return (
     <View>
-      <Detalhes item={item} navigation={navigation} botoes={botoes} />
+      {/* {!!modal && (
+        <Modal
+          coverScreen={true}
+          position="center"
+          onClosed={() => { console.log('modal closed') }}
+          backdropPressToClose={false}
+        >
+          <View>
+              <Text>Excluindo...</Text>
+          </View>
+        </Modal>
+      )} */}
+      <Detalhes
+        item={item}
+        navigation={navigation} botoes={botoes}
+      />
     </View>
   );
 };

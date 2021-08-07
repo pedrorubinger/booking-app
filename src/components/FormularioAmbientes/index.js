@@ -119,6 +119,7 @@ const FormularioAmbientes = ({ navigation, route }) => {
 
       db.collection('place').add(valoresFormatados)
         .then((ambienteCriado) => {
+          console.log('ambienteCriado:', ambienteCriado.id);
           dispatch(
             atualizarAmbientes(
               [...listaDeAmbientes,

@@ -28,7 +28,7 @@ const Home = ({ navigation }) => {
   const { itemAtivo } = useSelector((state) => state.HomeNav);
   const dispatch = useDispatch();
   const [listaDeMoradores, setListaDeMoradores] = useState(null);
-  const [listaDeMinhasReservas, setListaDeMinhasReservas] = useState(null);
+  // const [listaDeMinhasReservas, setListaDeMinhasReservas] = useState(null);
   const listaDeMenus = user?.role === 'resident'
     ? [
         { id: 1, nome: 'Locais Disponíveis' },
@@ -101,7 +101,8 @@ const Home = ({ navigation }) => {
           });
         });
 
-        setListaDeMinhasReservas(minhasReservas);
+        // setListaDeMinhasReservas(minhasReservas);
+        dispatch(atualizarReservas([...minhasReservas]));
       }).catch((err) => console.log('Erro ao buscar minhas reservas:', err));
   };
 
@@ -144,13 +145,14 @@ const Home = ({ navigation }) => {
 
   if (!listaDeAmbientes ||
     (user?.role === 'admin' && !listaDeMoradores && !listaDeReservas) ||
-    (user?.role === 'resident' && !listaDeMinhasReservas)
+    (user?.role === 'resident' && !listaDeReservas)
+    // (user?.role === 'resident' && !listaDeMinhasReservas)
   ) {
     return <Text>Carregando dados...</Text>;
   }
 
   // console.log('listaDeAmbientes:', listaDeAmbientes);
-  // console.log('listaDeReservas:', listaDeReservas);
+  console.log('listaDeReservas:', listaDeReservas);
   // console.log('listaDeMoradores:', listaDeMoradores);
   // console.log('listaDeMinhasReservas:', listaDeMinhasReservas);
 
@@ -172,7 +174,8 @@ const Home = ({ navigation }) => {
       case 1:
         return listaDeAmbientes; // TO DO: Filtrar locais que não estão reservados pelo morador.
       case 2:
-        return listaDeMinhasReservas;
+        return listaDeReservas;
+        // return listaDeMinhasReservas;
       default:
         return [];
     }
@@ -288,6 +291,10 @@ const Home = ({ navigation }) => {
     );
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <Container>
       <Cabecalho
@@ -300,7 +307,7 @@ const Home = ({ navigation }) => {
       <NavegacaoHome
         listaDeMenus={listaDeMenus}
         mostrarIconeDeAdicionar={
-          !(user?.role === 'admin' && itemAtivo === 2) &&
+          !(user?.role === 'admin' && itemAtivo !== 1) &&
           user?.role !== 'resident'
         }
         aoClicarEmAdicionar={() => {
