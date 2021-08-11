@@ -9,10 +9,14 @@ import Detalhes from '../../components/Detalhes';
 
 const DetalhesAmbiente = ({ route, navigation }) => {
   const { item, role } = route.params;
+  const { user } = useSelector((state) => state.Auth);
   const { listaDeAmbientes } = useSelector((state) => state.Ambientes);
   const { listaDeReservas } = useSelector((state) => state.Reservas);
   const [carregando, setCarregando] = useState(false);
   const dispatch = useDispatch();
+
+  console.log('item:', item);
+  console.log('user:', user);
 
   const aoExcluirAmbiente = () => {
     const id = item.ID;
@@ -87,25 +91,16 @@ const DetalhesAmbiente = ({ route, navigation }) => {
         {
           id: 1,
           cor: 'green',
-          texto: 'Reservar Ambiente',
-          aoPressionar: () => console.log('Clicou para reservar.'),
+          texto: carregando ? 'Reservando...' : 'Reservar Ambiente',
+          desativado: carregando,
+          aoPressionar: () => navigation.navigate('FormularioReserva', {
+            dados: item,
+          }),
         }
       ]
 
   return (
     <View>
-      {/* {!!modal && (
-        <Modal
-          coverScreen={true}
-          position="center"
-          onClosed={() => { console.log('modal closed') }}
-          backdropPressToClose={false}
-        >
-          <View>
-              <Text>Excluindo...</Text>
-          </View>
-        </Modal>
-      )} */}
       <Detalhes
         item={item}
         navigation={navigation} botoes={botoes}

@@ -8,9 +8,9 @@ import * as Yup from 'yup';
 
 import { atualizarAmbientes } from '../../store/reducers/ambientes';
 import { atualizarReservas } from '../../store/reducers/reservas';
-import { Conteudo } from './styles';
 import Botao from '../Button';
 import Cabecalho from '../Cabecalho';
+import { Conteudo } from './styles';
 import FormGroup from '../FormGroup';
 import Input from '../Input';
 import Label from '../Label';

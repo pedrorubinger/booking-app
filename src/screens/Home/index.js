@@ -89,21 +89,23 @@ const Home = ({ navigation }) => {
     const db = firebase.firestore();
     const minhasReservas = [];
 
-    db.collection('reservation').where('resident_email', '==', user.email)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const reserva = doc.data();
+    db.collection('reservation')
+      .where('resident_email', '==', user.email)
+      // .where('')
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const reserva = doc.data();
 
-          minhasReservas.push({
-            id: doc.id,
-            ...reserva
+            minhasReservas.push({
+              id: doc.id,
+              ...reserva
+            });
           });
-        });
 
-        // setListaDeMinhasReservas(minhasReservas);
-        dispatch(atualizarReservas([...minhasReservas]));
-      }).catch((err) => console.log('Erro ao buscar minhas reservas:', err));
+          // setListaDeMinhasReservas(minhasReservas);
+          dispatch(atualizarReservas([...minhasReservas]));
+        }).catch((err) => console.log('Erro ao buscar minhas reservas:', err));
   };
 
   const buscarReservas = () => {
@@ -152,7 +154,7 @@ const Home = ({ navigation }) => {
   }
 
   // console.log('listaDeAmbientes:', listaDeAmbientes);
-  console.log('listaDeReservas:', listaDeReservas);
+  // console.log('listaDeReservas:', listaDeReservas);
   // console.log('listaDeMoradores:', listaDeMoradores);
   // console.log('listaDeMinhasReservas:', listaDeMinhasReservas);
 

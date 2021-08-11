@@ -9,6 +9,7 @@ import DetalhesMorador from './screens/DetalhesMorador';
 import DetalhesReserva from './screens/DetalhesReserva';
 import DetalhesMinhaReserva from './screens/DetalhesMinhaReserva';
 import FormularioAmbientes from './components/FormularioAmbientes';
+import FormularioReserva from './components/FormularioReserva';
 import Home from './screens/Home';
 import Logout from './screens/Logout';
 import SignIn from './screens/SignIn';
@@ -59,6 +60,10 @@ const Routes = () => {
             <Stack.Screen
               name="DetalhesMinhaReserva"
               component={DetalhesMinhaReserva}
+            />
+            <Stack.Screen
+              name="FormularioReserva"
+              component={FormularioReserva}
             />
           </>
         ) : (
