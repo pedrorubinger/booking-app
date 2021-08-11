@@ -51,7 +51,7 @@ const DetalhesAmbiente = ({ route, navigation }) => {
 
               dispatch(atualizarAmbientes(listaDeAmbientesAtualizada));
               dispatch(atualizarReservas(listaDeReservasAtualizada));
-              navigation.navigate('Home');
+              navigation.navigate('DrawerNav', { screen: 'Home' });
             }).catch((err) => {
               console.error('Erro ao excluir ambiente:', err);
             });

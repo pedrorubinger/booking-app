@@ -67,7 +67,7 @@ const FormularioAmbientes = ({ navigation, route }) => {
           });
 
           dispatch(atualizarAmbientes(listaDeAmbientesAtt));
-          navigation.navigate('Home');
+          navigation.navigate('DrawerNav', { screen: 'Home' });
         })
         .catch(() => {
           Alert.alert(
@@ -119,7 +119,6 @@ const FormularioAmbientes = ({ navigation, route }) => {
 
       db.collection('place').add(valoresFormatados)
         .then((ambienteCriado) => {
-          console.log('ambienteCriado:', ambienteCriado.id);
           dispatch(
             atualizarAmbientes(
               [...listaDeAmbientes,
@@ -129,7 +128,7 @@ const FormularioAmbientes = ({ navigation, route }) => {
                 }
             ])
           );
-          navigation.navigate('Home');
+          navigation.navigate('DrawerNav', { screen: 'Home' });
         })
         .catch(() => {
           Alert.alert(
