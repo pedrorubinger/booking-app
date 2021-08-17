@@ -11,13 +11,13 @@ Booking App - Este repositório armazena o código de um aplicativo desenvolvido
 [x] (Usuário administrador) – Alteração de um ambiente.  
 [x] (Usuário administrador) – Exclusão de um ambiente.  
 [x] (Usuário administrador) – Visualização das reservas.  
-[] (Usuário morador) – Reserva de um ambiente.  
-[] (Usuário morador) – Cancelamento de uma reserva.  
-[] (Usuário morador) – Visualização de reservas.  
-[] Uso de caixa de diálogo (Alert) para confirmar a exclusão de dados.  
-[] Criação e uso de no mínimo 3 componentes de interface com estilização.  
+[x] (Usuário morador) – Reserva de um ambiente.  
+[x] (Usuário morador) – Cancelamento de uma reserva.  
+[x] (Usuário morador) – Visualização de reservas.  
+[x] Uso de caixa de diálogo (Alert) para confirmar a exclusão de dados.  
+[x] Criação e uso de no mínimo 3 componentes de interface com estilização.  
 [x] Rolagem com carregamento dinâmico de reservas e espaços.  
-[] Navegação utilizando DrawerNavigation, TabNavigation ou BottomNavigation.  
+[x] Navegação utilizando DrawerNavigation, TabNavigation ou BottomNavigation.  
 [x] Centralização dos estados das telas em único repositório (Redux).  
 [] Aplicação de no mínimo 10 heurísticas de UX.  
 [] Nomes de variáveis, constantes, classes, métodos, atributos e comentários.   desenvolvidos pelo aluno devem utilizar termos em português.

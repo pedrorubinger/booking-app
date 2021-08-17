@@ -9,14 +9,11 @@ import Detalhes from '../../components/Detalhes';
 
 const DetalhesAmbiente = ({ route, navigation }) => {
   const { item, role } = route.params;
-  const { user } = useSelector((state) => state.Auth);
+  // const { user } = useSelector((state) => state.Auth);
   const { listaDeAmbientes } = useSelector((state) => state.Ambientes);
   const { listaDeReservas } = useSelector((state) => state.Reservas);
   const [carregando, setCarregando] = useState(false);
   const dispatch = useDispatch();
-
-  console.log('item:', item);
-  console.log('user:', user);
 
   const aoExcluirAmbiente = () => {
     const id = item.ID;

@@ -1,12 +1,12 @@
 import React from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import firebase from 'firebase/app';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
+import { View } from 'react-native';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { View } from 'react-native';
 
+import { atualizarAmbientes } from '../../store/reducers/ambientes';
 import { atualizarReservas } from '../../store/reducers/reservas';
 import { Conteudo } from './styles';
 import Botao from '../Button';
@@ -16,19 +16,22 @@ import Input from '../Input';
 import Label from '../Label';
 import MensagemDeErro from '../MensagemDeErro';
 
-const validacaoReserva = Yup.object().shape({
-  initial_date: Yup.string().required('Insira a data inicial!'),
-  end_date: Yup.string().required('Insira a data final!'),
-});
-
 const FormularioReserva = ({ navigation, route }) => {
   const { user } = useSelector((state) => state.Auth);
   const { listaDeReservas } = useSelector((state) => state.Reservas);
+  const { listaDeAmbientes } = useSelector((state) => state.Ambientes);
   const { dados } = route.params;
   const dispatch = useDispatch();
+  const validacaoReserva = Yup.object().shape({
+    initial_date: Yup.string().required('Insira a data inicial!'),
+    // initial_time: Yup.string().required('Insira o horário de início!'),
+    end_date: Yup.string().required('Insira a data final!'),
+    // end_time: Yup.string().required('Insira o horário de término!'),
+  });
 
-  console.log('dados:', dados);
-  console.log('user:', user.email);
+  // console.log('listaDeReservas:', listaDeReservas);
+  // console.log('dados:', dados);
+  // console.log('user:', user.email);
 
   const aoEnviar = (valores) => {
     console.log('valores:', valores);
@@ -40,13 +43,25 @@ const FormularioReserva = ({ navigation, route }) => {
       place_name: dados.Nome,
       initial_date: valores.initial_date,
       end_date: valores.end_date,
+      // initial_time: valores.initial_time,
+      // end_time: valores.end_time,
     };
 
     db.collection('reservation').add(dadosFormatados)
-      .then(() => {
-        // IMPLEMENTAR OBJETO CRIADO...
-        dispatch(atualizarReservas([...listaDeReservas]));
-        navigation.navigate('DrawerNav', { screen: 'Home' });
+      .then((ambienteCriado) => {
+        db.collection('place')
+          .doc(dados.ID)
+          .set({ disponivel: false }, { merge: true })
+            .then(() => {
+              dispatch(atualizarReservas([
+                ...listaDeReservas,
+                { ...dadosFormatados, id: ambienteCriado.id }
+              ]));
+              dispatch(atualizarAmbientes([...listaDeAmbientes].filter((item) => item.id !== dados.ID)));
+              navigation.navigate('DrawerNav', { screen: 'Home' })
+            }).catch((err) => {
+              console.log('err:', err);
+            });
       })
       .catch((err) => {
         console.log('Erro ao reservar ambiente:', err);
@@ -81,20 +96,55 @@ const FormularioReserva = ({ navigation, route }) => {
             name="initial_date"
             render={({ field }) => {
               return (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={field.value || new Date()}
-                mode="date"
-                is24Hour={true}
-                display="default"
-                onChange={(value) => field.onChange(value)}
-              />
+                <Input
+                  {...field}
+                  type="text"
+                  onChangeText={(value) => field.onChange(value)}
+                  id="initial_date"
+                  name="initial_date"
+                  mask="99/99/9999"
+                  placeholder="DD/MM/AAAA"
+                  maxLength={10}
+                  keyboardType="numeric"
+                  hasError={!!errors?.initial_date}
+                  hasMask
+                />
             )}}
           />
           {!!errors?.initial_date && (
             <MensagemDeErro message={errors?.initial_date?.message} />
           )}
         </FormGroup>
+
+        {/* <FormGroup>
+          <Label htmlFor="initial_time" color="#545252" required>
+            Horário Inicial:
+          </Label>
+          <Controller
+            control={control}
+            defaultValue=""
+            name="initial_time"
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  type="text"
+                  onChangeText={(value) => field.onChange(value)}
+                  id="initial_time"
+                  name="initial_time"
+                  mask="99:99"
+                  placeholder="HH:MM"
+                  maxLength={5}
+                  keyboardType="numeric"
+                  hasError={!!errors?.initial_time}
+                  hasMask
+                />
+            )}}
+          />
+          {!!errors?.initial_time && (
+            <MensagemDeErro message={errors?.initial_time?.message} />
+          )}
+        </FormGroup> */}
 
         <FormGroup>
           <Label htmlFor="end_date" color="#545252" required>
@@ -111,8 +161,12 @@ const FormularioReserva = ({ navigation, route }) => {
                 onChangeText={(value) => field.onChange(value)}
                 id="end_date"
                 name="end_date"
-                placeholder="Data Final"
+                placeholder="DD/MM/AAAA"
                 hasError={!!errors?.end_date}
+                mask="99/99/9999"
+                maxLength={10}
+                keyboardType="numeric"
+                hasMask
               />
             )}
           />
@@ -120,6 +174,36 @@ const FormularioReserva = ({ navigation, route }) => {
             <MensagemDeErro message={errors?.end_date?.message} />
           )}
         </FormGroup>
+
+        {/* <FormGroup>
+          <Label htmlFor="end_time" color="#545252" required>
+            Horário Final:
+          </Label>
+          <Controller
+            control={control}
+            defaultValue=""
+            name="end_time"
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  type="text"
+                  onChangeText={(value) => field.onChange(value)}
+                  id="end_time"
+                  name="end_time"
+                  mask="99:99"
+                  placeholder="HH:MM"
+                  maxLength={5}
+                  keyboardType="numeric"
+                  hasError={!!errors?.end_time}
+                  hasMask
+                />
+            )}}
+          />
+          {!!errors?.end_time && (
+            <MensagemDeErro message={errors?.end_time?.message} />
+          )}
+        </FormGroup> */}
 
         <Botao
           disabled={isSubmitting}

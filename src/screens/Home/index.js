@@ -42,27 +42,36 @@ const Home = ({ navigation }) => {
 
   const buscarAmbientes = () => {
     const db = firebase.firestore();
+    const query = db.collection('place');
 
-    db.collection('place')
-      .get()
-      .then((querySnapshot) => {
-        const ambientes = [];
+    const onFetch = (querySnapshot) => {
+      const ambientes = [];
 
-        querySnapshot.forEach((doc) => {
-          const ambiente = doc.data();
+      querySnapshot.forEach((doc) => {
+        const ambiente = doc.data();
 
-          if (user?.role === 'resident' && !ambiente.disponivel) {
-            return;
-          } else {
-            ambientes.push({
-              id: doc.id,
-              ...ambiente,
-            });
-          }
-        });
+        if (user?.role === 'resident' && !ambiente.disponivel) {
+          return;
+        } else {
+          ambientes.push({
+            id: doc.id,
+            ...ambiente,
+          });
+        }
+      });
 
-        dispatch(atualizarAmbientes([...ambientes]));
-    }).catch((err) => console.log('Erro ao buscar ambientes:', err));
+      dispatch(atualizarAmbientes([...ambientes]));
+    };
+
+    if (user?.role === 'resident') {
+      query.where('disponivel', '==', true).get()
+        .then(onFetch)
+        .catch((err) => console.log('Erro ao buscar ambientes:', err));
+    } else {
+      query.get()
+        .then(onFetch)
+        .catch((err) => console.log('Erro ao buscar ambientes:', err));
+    }
   };
 
   const buscarMoradores = () => {
@@ -91,7 +100,6 @@ const Home = ({ navigation }) => {
 
     db.collection('reservation')
       .where('resident_email', '==', user.email)
-      // .where('')
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
@@ -153,7 +161,7 @@ const Home = ({ navigation }) => {
     return <Text>Carregando dados...</Text>;
   }
 
-  // console.log('listaDeAmbientes:', listaDeAmbientes);
+  console.log('listaDeAmbientes:', listaDeAmbientes);
   // console.log('listaDeReservas:', listaDeReservas);
   // console.log('listaDeMoradores:', listaDeMoradores);
   // console.log('listaDeMinhasReservas:', listaDeMinhasReservas);
@@ -278,6 +286,7 @@ const Home = ({ navigation }) => {
             'Data Inicial': item.initial_date,
             'Data Final': item.end_date,
           },
+          place_id: item.place_id,
         })}  
       >
         <TituloDoItem margemInferior="8px">{item.place_name}</TituloDoItem>
