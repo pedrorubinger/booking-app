@@ -19,5 +19,5 @@ Booking App - Este repositório armazena o código de um aplicativo desenvolvido
 [x] Rolagem com carregamento dinâmico de reservas e espaços.  
 [x] Navegação utilizando DrawerNavigation, TabNavigation ou BottomNavigation.  
 [x] Centralização dos estados das telas em único repositório (Redux).  
-[] Aplicação de no mínimo 10 heurísticas de UX.  
+[x] Aplicação de no mínimo 10 heurísticas de UX.  
 [] Nomes de variáveis, constantes, classes, métodos, atributos e comentários.   desenvolvidos pelo aluno devem utilizar termos em português.

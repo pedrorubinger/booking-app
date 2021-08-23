@@ -13,7 +13,7 @@ import FormularioReserva from './components/FormularioReserva';
 import Home from './screens/Home';
 import Logout from './screens/Logout';
 import SignIn from './screens/SignIn';
-import SignUp from './screens/SignUp';
+import Registrar from './screens/Registrar';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -69,7 +69,7 @@ const Routes = () => {
         ) : (
           <>
             <Stack.Screen name="SignIn" component={SignIn} />
-            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="Registrar" component={Registrar} />
           </>
         )}
       </Stack.Navigator>

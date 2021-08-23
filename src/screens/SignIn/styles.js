@@ -14,7 +14,7 @@ export const Content = styled.KeyboardAvoidingView`
   justify-content: center;
 `;
 
-export const SignUpLabel = styled.Text`
+export const EtiquetaRegistrar = styled.Text`
   color: #FFF;
   text-align: center;
   margin-bottom: 12px;

@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import { atualizarAmbientes } from '../../store/reducers/ambientes';
 import { atualizarReservas } from '../../store/reducers/reservas';
 import { Conteudo } from './styles';
-import Botao from '../Button';
+import Botao from '../Botao';
 import Cabecalho from '../Cabecalho';
 import FormGroup from '../FormGroup';
 import Input from '../Input';
@@ -29,13 +29,7 @@ const FormularioReserva = ({ navigation, route }) => {
     // end_time: Yup.string().required('Insira o horário de término!'),
   });
 
-  // console.log('listaDeReservas:', listaDeReservas);
-  // console.log('dados:', dados);
-  // console.log('user:', user.email);
-
   const aoEnviar = (valores) => {
-    console.log('valores:', valores);
-
     const db = firebase.firestore();
     const dadosFormatados = {
       place_id: dados.ID,

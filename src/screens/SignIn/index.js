@@ -8,9 +8,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Yup from 'yup';
 import 'firebase/firestore';
 
-import { Container, Content, LogoTitle, SignUpLabel } from './styles';
+import { Container, Content, LogoTitle, EtiquetaRegistrar } from './styles';
 import { setUser } from '../../store/reducers/auth';
-import Botao from '../../components/Button';
+import Botao from '../../components/Botao';
 import FormGroup from '../../components/FormGroup';
 import Input from '../../components/Input';
 import Label from '../../components/Label';
@@ -117,8 +117,8 @@ const SignIn = ({ navigation }) => {
         </Botao>
       </Content>
 
-      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-        <SignUpLabel>Registrar-se</SignUpLabel>
+      <TouchableOpacity onPress={() => navigation.navigate('Registrar')}>
+        <EtiquetaRegistrar>Registrar-se</EtiquetaRegistrar>
       </TouchableOpacity>
     </Container>
   );

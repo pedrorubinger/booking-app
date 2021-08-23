@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
 import { Container, LogoTitle, SignInLabel } from './styles';
-import Button from '../../components/Button';
+import Botao from '../../components/Botao';
 import FormGroup from '../../components/FormGroup';
 import Input from '../../components/Input';
 import Label from '../../components/Label';
@@ -22,7 +22,7 @@ const esquemaDeRegistro = Yup.object().shape({
   phone: Yup.string().required('Informe o telefone!')
 });
 
-const SignUp = ({ navigation }) => {
+const Registrar = ({ navigation }) => {
   const {
     control,
     handleSubmit,
@@ -175,13 +175,13 @@ const SignUp = ({ navigation }) => {
         )}
       </FormGroup>
 
-      <Button
+      <Botao
         margin="20px 0"
         onPress={handleSubmit(registrarUsuario)}
         disabled={isSubmitting}
       >
         {isSubmitting ? 'Cadastrando...' : 'Cadastrar'}
-      </Button>
+      </Botao>
 
       <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
         <SignInLabel>Voltar para Login</SignInLabel>
@@ -190,4 +190,4 @@ const SignUp = ({ navigation }) => {
   );
 };
 
-export default SignUp;
+export default Registrar;
